@@ -44,6 +44,28 @@ public class TowerManager : MonoBehaviour
         if (LevelState.State == LevelState.GameState.Placing) _towerPreview.SetActive(true);
         else _towerPreview.SetActive(false);
     }
+    
+    private void OtherUpdate()
+    {
+        if (LevelState.State != LevelState.GameState.Placing) return;
+        
+        // Update the range preview
+        _towerPreview.transform.GetChild(1).gameObject.SetActive(true);
+        _towerPreview.transform.GetChild(1).localScale = new Vector3(towerPrefab.GetComponent<Tower>().Range * 2 / towerPrefab.transform.localScale.x, towerPrefab.GetComponent<Tower>().Range * 2 / towerPrefab.transform.localScale.x, 0);
+        
+        // Set the preview to the mouse position
+        Vector3 mousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
+        mousePosition.z = 0;
+        _towerPreview.transform.position = ClosestTilePosition(mousePosition);
+        
+        // If clicked, place the tower and set the state to running.
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+        {
+            PlaceTower(ClosestTilePosition(mousePosition));
+            LevelState.SetState(LevelState.GameState.Running);
+            _towerPreview.SetActive(false);
+        }
+    }
 
     
     private void UpdateState()
