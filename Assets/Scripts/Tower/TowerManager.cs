@@ -44,6 +44,15 @@ public class TowerManager : MonoBehaviour
         if (LevelState.State == LevelState.GameState.Placing) _towerPreview.SetActive(true);
         else _towerPreview.SetActive(false);
     }
+    
+    private void CheckCancel()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            LevelState.SetState(LevelState.GameState.Running);
+            _towerPreview.SetActive(false);
+        }
+    }
 
     
     private void UpdateState()
